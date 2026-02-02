@@ -340,3 +340,5 @@ const dividir: OperacionMatematica = (x, y) => x / y;
 // 3. Intento fallido
 // const decirHola: OperacionMatematica = (x, y) => "Hola"; // ❌ Error: El tipo 'string' no es asignable a 'number'.
 }
+
+//
