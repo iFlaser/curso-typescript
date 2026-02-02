@@ -1,344 +1,134 @@
-const mensaje: string = "Hola desde VS Code";
-// Intenta borrar las comills y poner un número para ver como VS Code te subraya en rojo el error.
-console.log(mensaje);
+/*
+Paso 1: El Modelo de Datos (Interface)
+Primero, definimos qué forma tiene una tarea. Esto es el contrato que usarán nuestros datos.
+*/
 
-let nombre: string = "Ana";
-let apellido: string = "Pérez";
-let saludo: string = `Hola, mi nombre es ${nombre} ${apellido}`; // Template literal
-
-{
-let edad: number = 30;
-let altura: number = 1.75;
-let temperatura: number = -5;
-}
-let estaLogueado: boolean = true;
-let tienePermisos: boolean = false;
-
-// No le decimos que es 'string', pero TS lo sabe porque le asignamos texto.
-let curso = "Curso de TypeScript";
-
-let esFinDeSemana = false;
-
-let ventas: number;
-
-ventas = 1000;
-
-console.log(ventas + 50);
-
-let variableLoca: any = "Soy un texto";
-
-// Como es 'any', TS te deja asignarle un número después
-variableLoca = 20;
-
-let variableDesconocida: unknown = "Hola";
-
-// TS te deja asignarle cualquier cosa, igual que any
-variableDesconocida = 100;
-variableDesconocida = "Ahora soy texto";
-
-// PERO... si intentas usarla, TS te detiene:
-// Error: 'variableDesconocida' is of type 'unknow'
-
-// console.log(variableDesconocida.toUpperCase()); // <--- Descomenta para ver el error rojo
-
-// SOLUCIÓN: Tienes que verificar el tipo primero (Type Guard)
-
-if (typeof variableDesconocida === "string") {
-  // Aquí dentro TS sabe que es un string y te deja usarlo
-  console.log(variableDesconocida.toUpperCase());
-}
-
-function saludarConsola(nombre: string): void {
-  console.log(`Hola, ${nombre}`);
-}
-
-saludarConsola("Fer");
-
-let vacio: undefined = undefined;
-let nulo: null = null;
-
-// Ejemplo de seguridad:
-
-let miNumero: number = 10;
-// miNumero = null; // Error: El tipo 'null' no es asignable al tipo 'number'
-
-let datoApi: unknown = true;
-// console.log(datoApi.toFixed(2));
-
-if (typeof datoApi === "number") {
-  console.log(datoApi.toFixed(2));
-}
-
-let habilidades: string[] = ["JavaScrip", "TypeScript", "Node.js"];
-
-let puntuaciones: number[] = [10, 5, 8, 9];
-
-// Si intentas meter un intruso, TS se queja:
-// habilidades.push(100); // Error: Argument of type 'number' is not assignable to 'string'
-
-let nombres: Array<string> = ["Ana", "Luis", "María"];
-
-let mezcla: (string | number)[] = ["Hola", 100, "Mundo", 500];
-
-// Definimos una tupla: [ID del usuario, Nombre del usuario, ¿Es Admin?]
-// El primer elemento DEBE ser number, el segundo string, el tecero boolean.
-let usuarioDb: [number, string, boolean] = [1, "Carlos", true];
-
-// Correcto:
-usuarioDb[1] = "Pedro";
-
-// Error de Tipo:
-// usuarioDb[0] = "Hola"; // Error: El índice 0 espera un número.
-
-// Error de Longitud (fuera de rango):
-// usuarioDb[3] = "Algo más"; // Error: La tupla solo tiene 3 elementos.
-
-// Como TS sabe que el índice 1 es un string...
-console.log(usuarioDb[1].toUpperCase()); // ✅ Te autocompleta métodos de string.
-
-// Como TS sabe que el índice 0 es un number...
-// console.log(usuarioDb[0].toUpperCase()); // ❌ Te marca error, los números no tienen toUpperCase.
-
-//CARRITO DE COMPRAS SIMPLE (EJERCICIO)
-
-let listaDeCompras: string[] = ["Leche", "Pan"];
-listaDeCompras.push("Huevos");
-
-let producto: [string, number, number];
-
-producto = ["Zapatillas", 89.99, 2];
-
-console.log(producto[1] * producto[2]);
-
-// Creamos un tipo que puede ser número o string
-type IdFlexible = number | string;
-
-let idUsuario: IdFlexible;
-
-idUsuario = 10;
-idUsuario = "A-55";
-// idUsuario = true; // ERROR! boolean no es ni number ni string
-
-// Solo permitimos estos tres valores exactos
-type Talla = "S" | "M" | "L" | "XL";
-
-let camiseta: Talla;
-
-camiseta = "M";
-
-// 1. Definimos la Unión Literal
-// Esto limita los valores exactos que puede recibir el tipo
-type MetodoContacto = "email" | "telefono";
-
-// 2. Definimos el tipo Contacto (Estructura del objeto)
-type Contacto = {
-  nombre: string;
-  metodo: MetodoContacto;
-};
-
-// 3. Creamos la variable
-const miContacto: Contacto = {
-  nombre: "Fernando",
-  // Si escribes "carta" aquí, VS Code te lo subrayará en rojo
-  // Error: Type '"carta"' is not assignable to type 'MetodoContacto'.
-  metodo: "email",
-};
-
-console.log(
-  `Contacto: ${miContacto.nombre}, se prefiere usar: ${miContacto.metodo}`,
-);
-
-interface Usuario {
-  nombre: string;
-  edad: number;
-  email: string;
-}
-
-// Creamos un objeto que cumple el contrato
-const perfil: Usuario = {
-  nombre: "Laura",
-  edad: 28,
-  email: "laura@email.com",
-};
-
-// Error: Falta la propiedad 'email'
-// const perfilCompleto: Usuario = { nobre: "Pedro", edad: 20}
-
-console.log(perfil.edad);
-
-interface Producto {
-  nombre: string;
-  precio: number;
-  descripcion?: string; // <--- Opcional (puede ser string o undefined)
-}
-
-const tableta: Producto = {
-  nombre: "iPad",
-  precio: 500,
-  // No ponemos descripción y TS no se queja, es válido.
-};
-
-console.log(tableta);
-
-interface Configuracion {
-  readonly idDispositivo: string;
-  tema: "oscuro" | "claro";
-}
-
-const miConfig: Configuracion = {
-  idDispositivo: "A-123-XYZ", // Asignamos valor inicial
-  tema: "oscuro",
-};
-
-miConfig.tema = "claro"; // Permitido
-// miConfig.idDispositivo = "B-999"; // ❌ Error: Cannot assign to 'idDispositivo' because it is a read-only property.
-
-// Se ven casi iguales
-interface Perro {
-  nombre: string;
-}
-type Gato = { nombre: string };
-
-interface Cancion {
-  readonly id: number;
+// 1. Definimos la estructura de una Tarea
+interface Tarea {
+  id: number;
   titulo: string;
-  artista: string;
-  album?: string;
+  completada: boolean;
 }
 
-const miCancion: Cancion = {
-  id: 1,
-  titulo: "ASD",
-  artista: "Judeline",
-};
+/*
+Paso 2: La Lógica de Negocio (Clase)
+Crearemos la clase que administrará el estado. 
+Usaremos encapsulamiento (private) para proteger la lista de tareas y evitar que se modifique desde fuera sin permiso.
+*/
 
-miCancion.album = "Greatest Hits";
+class GestorDeTareas {
+  // Propiedad privada: solo la clase puede modificar este array directamente.
+  private tareas: Tarea[] = [];
 
-console.group(miCancion);
-
-function procesarId(id: string | number) {
-  // Aquí "is" es string O number
-  // id.toUpperCae(); // ERROR ¡: la propiedad no existe en 'number'
-
-  if (typeof id === "string") {
-    // Dentro de estas llaves, TS sabe que 'id' es 100% string.
-    console.log("El ID es texto: " + id.toUpperCase());
-  } else {
-    // Si no entró en el if, TS es tan listo que deduce que 'id' TIENE que ser number.
-    console.log("El ID es número: " + id.toFixed());
+  // Constructor: Inicializamos el array (aunque ya lo hicimos arriba, es buena práctica)
+  constructor() {
+    this.tareas = [];
   }
-}
 
-// CASO 1: Pasando un String
-// Entrará en el bloque 'if'
-procesarId("usuario-X");
-// Salida en consola: "El ID es texto: USUARIO-X"
+  // MÉTODOS ---------------------------------
 
-// CASO 2: Pasando un Number
-// Entrará en el bloque 'else'
-procesarId(456.789);
-// Salida en consola: "El ID es número: 457"
-// (Nota: .toFixed() sin argumentos redondea al entero más cercano en formato string)
+  // 1. Agregar Tarea
+  public agregarTarea(titulo: string): void {
+    // Validación simple
+    if (titulo === "" || titulo.trim() === "") {
+      console.log("Error: El título no puede estar vacío");
+      return;
+    }
+    /*
+    titulo === "": Comprueba si el texto está literalmente vacío (longitud 0).
+    ||: Es el operador lógico OR (O). La validación pasa si se cumple la izquierda O la derecha.
+    titulo.trim() === "": Esta es la parte más importante. El método .trim() elimina los espacios en blanco al principio y al final.
+    ¿Por qué se hace? Para evitar que alguien guarde una tarea que sea solo espacios (" "). 
+    Sin el .trim(), Git o tu programa aceptarían esos espacios como un título válido.
+    */
 
-// CASO 3: Pasando una variable
-let miIdDeBaseDeDatos: number = 99;
-procesarId(miIdDeBaseDeDatos);
-// Salida en consola: "El ID es número: 99"
+    const nuevaTarea: Tarea = {
+      id: Date.now(), //Usamos la fecha como ID único simple
+      titulo: titulo,
+      completada: false,
+    };
 
-function imprimirNombre(nombre?: string) {
-  // nombre es: string | undefined
-  // Verificamos si 'nombre' tiene valor (si no es null, undefined, ni vacío)
-  if (nombre) {
-    // Aquí TS ya sabe que 'nombre' es string (y no undefined)
-    console.log("Hola " + nombre.toUpperCase());
-  } else {
-    console.log("No hay nombre disponible");
+    this.tareas.push(nuevaTarea);
+    console.log(`Tarea agregada: ${titulo}`);
   }
-}
 
-imprimirNombre("Fer");
+  // 2. Marcar como completada
+  public marcarCompletada(id: number): void {
+    // Buscamos la tarea en el array
+    const tareaEncontrada = this.tareas.find((t) => t.id === id);
 
-// Objetos, es lo mismo. Forma desplegada y forma concnetrada
-interface Pez {
-  nadar: () => void;
-}
-interface Pajaro {
-  volar: () => void;
-}
-
-function moverAnimal(animal: Pez | Pajaro) {
-  // Si la propiedad 'nadar existe en 'animal'
-  if ("nadar" in animal) {
-    animal.nadar(); // TS sabe que es un Pez
-  } else {
-    animal.volar(); // TS sabe que es un Pajaro
-  }
-}
-
-let miPez: Pez;
-
-miPez = {
-  nadar: () => {
-    console.log("El pez está nadando");
-  },
-};
-
-moverAnimal(miPez);
-
-function transformarDato(input: string | number) {
-  // Escribe tu lógica de Type Guard aquí abajo
-  if (typeof input === "string") {
-    // TS le dejará usar .toUppperCase() aquí
-    console.log(`Es texto: ${input.toUpperCase}`);
-  }
-}
-
-{
-  function transformarDato(input: string | number) {
-    // Escribe tu lógica de Type Guard aquí abajo
-    if (typeof input === "string") {
-      // TS te dejará usar .toUpperCase() aquí
-      console.log(`Es texto: ${input.toUpperCase()}`);
+    // Narrowing: Verificamos si existe anter de usarla
+    if (tareaEncontrada) {
+      tareaEncontrada.completada = true;
+      console.log(`Tarea "${tareaEncontrada.titulo}" marcada como completada.`);
     } else {
-      // TS sabe que esto es number
-      console.log(`Es número x2: ${input * 2}`);
+      console.log(`ERROR: No se encontró ninguna tarea con el ID: ${id}`);
     }
   }
 
-  // Pruebas
-  transformarDato("hola mundo"); // Debería salir: Es texto: HOLA MUNDO
-  transformarDato(50); // Debería salir: Es número x2: 100
+  // 3. Listar todas las tareas
+  public listarTareas(): void {
+    console.log("\n--- LISTA DE TAREAS ---");
+
+    if (this.tareas.length === 0) {
+      console.log("No hay tareas pendientes. ¡Buen trabajo!");
+      return;
+    }
+
+    this.tareas.forEach((tarea) => {
+      // Operador ternario para mostrar un icono u otro
+      const estado = tarea.completada ? "[X]" : "[]";
+      console.log(`${estado} ${tarea.titulo} (ID: ${tarea.id})`);
+    });
+    console.log("------------------\n");
+  }
+
+public eliminarTarea(id: number): void {
+    for(let i = 0; i < this.tareas.length; i++){
+        if(this.tareas[i]?.id === id){
+            this.tareas.splice(i, 1);
+            console.log(`Tarea con ID ${id} eliminada.`);
+            return;
+        }
+    }
 }
 
-// function nombre(parametro: TIPO, parametro2: TIPO)
-function sumar(a: number, b: number){
-  return a+b;
 }
 
-sumar(10, 20);
+// Instanciamos la clase
+const miGestor = new GestorDeTareas();
 
-// sumar(10, "Hola"); // ERROR: El argumento "Hola" no es un número.
+// PROBAMOS LA APLICACIÓN
 
-//               Entradas           Salida esperada
-//                  👇                  👇
-function duplicar(x: number): number {
-    return x * 2;
-    // return "Hola"; // ❌ Error: El tipo 'string' no es asignable a 'number'.
-}
+// 1. Intentamos agregar una tarea vacía (debería fallar)
+miGestor.agregarTarea("");
 
-{
-// 1. Definimos el TIPO (La forma de la función)
-// "Quiero una función que reciba (number, number) y devuelva (number)"
-type OperacionMatematica = (a: number, b: number) => number;
+// 2. Agregamos tareas válidas
+miGestor.agregarTarea("Aprender TypeScript");
+miGestor.agregarTarea("Hacer la compra");
+miGestor.agregarTarea("Pasear al perro");
 
-// 2. Creamos las funciones reales 
-const sumar: OperacionMatematica = (x, y) => x + y;
-const restar: OperacionMatematica = (x, y) => x - y;
-const multiplicar: OperacionMatematica = (x, y) => x * y;
-const dividir: OperacionMatematica = (x, y) => x / y;
+// 3. Listamos para ver qué IDs se generaron
+miGestor.listarTareas();
 
-// 3. Intento fallido
-// const decirHola: OperacionMatematica = (x, y) => "Hola"; // ❌ Error: El tipo 'string' no es asignable a 'number'.
-}
+// NOTA: Copia un ID de la consola al ejecutarlo para probar el siguiente paso.
+// Como usamos Date.now(), los IDs cambiarán en cada ejecución.
+// Aquí simularemos que completamos la primera tarea accediendo "internamente" 
+// (en un caso real, obtendrías el ID de la interfaz gráfica).
 
-//
+// Truco para obtener el ID de la primera tarea para el ejemplo:
+// (Esto es solo para probar, normalmente el usuario te da el ID)
+// No te preocupes si no entiendes esta línea 'any', es solo para el test.
+const idParaPrueba = (miGestor as any).tareas[0].id; 
+
+// 4. Marcamos como completada
+miGestor.marcarCompletada(idParaPrueba);
+
+// 5. Intentamos marcar una que no existe
+miGestor.marcarCompletada(999);
+
+// 6. Listamos nuevamente para ver el resultado final
+miGestor.listarTareas();
+
+miGestor.eliminarTarea(idParaPrueba);
+miGestor.listarTareas();
