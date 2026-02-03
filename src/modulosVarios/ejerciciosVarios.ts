@@ -342,3 +342,17 @@ const dividir: OperacionMatematica = (x, y) => x / y;
 }
 
 //
+// Le decimos expolicitamente: "Esto es un input"
+const input = document.getElementById("milInput") as HTMLInputElement;
+
+// Ahora TS sabe que tiene .value y que (si confiamos en el casting) no es null
+console.log(input.value); // Correcto
+
+// Sin el !
+const titulo = document.getElementById("titulo-principal");
+// titulo.style.color = "red"; // ERROR: `titulo`is possibly `null`
+
+// Con el ! (La "exclamacion de confianza")
+const tituloSeguro = document.getElementById("titulo-principal")!;
+tituloSeguro.style.color = "red"; // Correcto
+
