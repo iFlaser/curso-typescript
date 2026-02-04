@@ -41,3 +41,29 @@ let persona2: Persona = {
     nombre: 'Maria',
     telefono: '123456789'
 }
+
+// 6. Readonly (No tocar)
+interface Configuracion {
+    readonly apiKEy: string;
+}
+
+let configuracion: Configuracion = {
+    apiKEy: '123456789'
+}
+
+// let configuracion: Configuracion = {apiKEy: '123456789'}. // Es lo mismo
+
+// configuracion.apiKEy = '987654321'; // Error
+
+
+// 7. Usando un Type dentro de una interfaz
+type Categoria = 'fisico' | 'digital';
+
+interface Producto {
+    nombre: string;
+    tipo: Categoria;
+}
+
+let producto: Producto = {nombre:"Mesa", tipo: 'fisico'};
+
+8. Array de Interfaces
